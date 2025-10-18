@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script charset="UTF-8" type="text/javascript" src="./solid.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUI ONE - 即时提现服务</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --secondary: #00CEFF;
+            --dark: #2D3436;
+            --light: #F5F6FA;
+            --success: #00B894;
+            --warning: #FDCB6E;
+            --danger: #E84393;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(108, 92, 231, 0.1) 0%, rgba(0, 206, 255, 0.1) 100%);
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+        
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 5s;
+        }
+        
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            top: 30%;
+            left: 70%;
+            animation-delay: 10s;
+        }
+        
+        .floating-icon {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(108, 92, 231, 0.2);
+            animation: float-icon 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(10px) translateX(-10px);
+            }
+            75% {
+                transform: translateY(-10px) translateX(-20px);
+            }
+        }
+        
+        @keyframes float-icon {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-100px) translateX(100px) rotate(90deg);
+            }
+            50% {
+                transform: translateY(0) translateX(200px) rotate(180deg);
+            }
+            75% {
+                transform: translateY(100px) translateX(100px) rotate(270deg);
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+            }
+        }
+        
+        /* Header */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo-text span {
+            color: var(--secondary);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .language-switcher-top-right {
+            display: flex;
+            background-color: rgba(108, 92, 231, 0.1);
+            border-radius: 30px;
+            padding: 5px;
+            margin-left: auto;
+            margin-right: 20px;
+        }
+        
+        .lang-btn {
+            background: none;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            color: var(--dark);
+            font-size: 14px;
+        }
+        
+        .lang-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .lang-btn:hover {
+            background-color: rgba(108, 92, 231, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .flag {
+            width: 20px;
+            height: 15px;
+            border-radius: 2px;
+            background-size: cover;
+            flex-shrink: 0;
+        }
+        
+        .flag.en {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30"><clipPath id="a"><path d="M0 0v30h60V0z"/></clipPath><clipPath id="b"><path d="M30 15h30v15zv15H0zH0V0zV0h30z"/></clipPath><g clip-path="url(#a)"><path d="M0 0v30h60V0z" fill="%2300247d"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" clip-path="url(#b)" stroke="#CF142B" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#CF142B" stroke-width="6"/></g></svg>');
+        }
+        
+        .flag.cn {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30"><path d="M0 0h60v30H0z" fill="%23DE2910"/><path d="M30 6l2.5 7.7H40l-6.5 4.7 2.5 7.7-6.5-4.7-6.5 4.7 2.5-7.7L20 13.7h7.5z" fill="%23FFDE00"/><path d="M30 8.5l1.4 4.3h4.5L33 15.3l1.4 4.3L30 16.3l-4.4 3.3 1.4-4.3-3-2.5h4.5z" fill="%23FFDE00"/></svg>');
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(108, 92, 231, 0.4);
+        }
+        
+        .interact-button:hover {
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 180px 0 80px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: #555;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+        
+        .highlight {
+            background-color: rgba(108, 92, 231, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        /* Withdrawal Form */
+        .withdrawal-form {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            margin: 40px auto;
+            animation: fadeIn 1s ease-out;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .withdrawal-form:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+            outline: none;
+        }
+        
+        .form-note {
+            font-size: 14px;
+            color: #777;
+            margin-top: 5px;
+        }
+        
+        .bank-options {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        
+        .bank-option {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .bank-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .bank-option.active {
+            border-color: var(--primary);
+            background-color: rgba(108, 92, 231, 0.05);
+        }
+        
+        .bank-logo {
+            height: 40px;
+            margin-bottom: 10px;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: var(--dark);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background-color: var(--light);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 14px;
+            color: #bbb;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Hidden sections */
+        .hidden {
+            display: none;
+        }
+        
+        /* Success Message */
+        .success-message {
+            background-color: rgba(0, 184, 148, 0.1);
+            border: 1px solid var(--success);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            color: var(--success);
+            font-weight: 500;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .withdrawal-form {
+                padding: 30px 20px;
+            }
+            
+            .bank-options {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .bank-option {
+                margin: 0;
+            }
+            
+            .language-switcher-top-right {
+                margin-right: 10px;
+            }
+            
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            .flag {
+                width: 16px;
+                height: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-circle circle-1"></div>
+        <div class="bg-circle circle-2"></div>
+        <div class="bg-circle circle-3"></div>
+        <div class="floating-icon" style="top: 20%; left: 15%;"><i class="fas fa-money-bill-wave"></i></div>
+        <div class="floating-icon" style="top: 70%; left: 10%;"><i class="fas fa-mobile-alt"></i></div>
+        <div class="floating-icon" style="top: 40%; left: 85%;"><i class="fas fa-shield-alt"></i></div>
+        <div class="floating-icon" style="top: 80%; left: 80%;"><i class="fas fa-bolt"></i></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo-container">
+                    <img src="http://huione-withdraw.asia/logo.png" alt="HUI One" class="logo-img">
+                    <div class="logo-text">HUI <span>ONE</span></div>
+                </div>
+                
+                <!-- Language Switcher - Top Right -->
+                <div class="language-switcher-top-right">
+                    <a href="http://huione-withdraw.asia/indexen.html" class="lang-btn">
+                        <span class="flag en"></span>
+                        English
+                    </a>
+                    <a href="http://huione-withdraw.asia/indexcn.html" class="lang-btn active">
+                        <span class="flag cn"></span>
+                        中文
+                    </a>
+                </div>
+                
+                <ul class="nav-links">
+                    <li><a href="#" class="btn">登录</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>即时提现服务</h1>
+            <p>用户现在就可以提现到他们的 <span class="highlight">ABA银行账户</span> 或到 <span class="highlight">Wing</span>。服务通过Hui Two系统持续更新。<span class="highlight">即时提现限额50,000美元</span>。</p>
+            
+            <!-- Step 1: Account Number Input -->
+            <div class="withdrawal-form" id="step1">
+                <div class="form-group">
+                    <label for="account-number">输入您的HUI ONE账户号码：</label>
+                    <input type="text" id="account-number" class="form-control" placeholder="输入账户号码">
+                </div>
+                <button class="btn interact-button" id="continue-btn">继续</button>
+            </div>
+            
+            <!-- Step 2: Amount Input -->
+            <div class="withdrawal-form hidden" id="step2">
+                <div class="form-group">
+                    <label for="amount">输入您要转账的金额：</label>
+                    <input type="number" id="amount" class="form-control" placeholder="输入金额 (最高50,000美元)">
+                    <p class="form-note">即时提现限额：50,000美元</p>
+                </div>
+                
+                <div class="bank-options">
+                    <div class="bank-option active" data-bank="aba">
+                        <img src="https://via.placeholder.com/100x40/00B894/FFFFFF?text=ABA%20Bank" alt="ABA Bank" class="bank-logo">
+                        <p>ABA银行</p>
+                    </div>
+                    <div class="bank-option" data-bank="wing">
+                        <img src="https://via.placeholder.com/100x40/FDCB6E/000000?text=Wing" alt="Wing" class="bank-logo">
+                        <p>Wing</p>
+                    </div>
+                </div>
+                
+                <!-- ABA Account Number Field -->
+                <div class="form-group" id="aba-account-field">
+                    <label for="aba-account">ABA账户号码：</label>
+                    <input type="text" id="aba-account" class="form-control" placeholder="输入您的ABA账户号码">
+                </div>
+                
+                <!-- Wing Phone Number Field -->
+                <div class="form-group hidden" id="wing-phone-field">
+                    <label for="wing-phone">Wing电话号码：</label>
+                    <input type="text" id="wing-phone" class="form-control" placeholder="输入您的Wing电话号码">
+                </div>
+                
+                <button class="btn interact-button" id="transfer-btn">转账</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">为什么选择HUI ONE</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>即时转账</h3>
+                    <p>通过我们闪电般的提现系统，即时获得您的资金。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>安全可靠</h3>
+                    <p>您的交易受到银行级安全协议的保护。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <h3>高额限额</h3>
+                    <p>即时提现高达50,000美元到您偏好的银行账户。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>HUI ONE</h3>
+                    <p>以最高安全标准为ABA和Wing账户提供即时提现服务。</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>服务</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">即时提现</a></li>
+                        <li><a href="#">银行转账</a></li>
+                        <li><a href="#">移动支付</a></li>
+                        <li><a href="#">企业解决方案</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>支持</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">帮助中心</a></li>
+                        <li><a href="#">联系我们</a></li>
+                        <li><a href="#">常见问题</a></li>
+                        <li><a href="#">安全</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>联系</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 柬埔寨金边</li>
+                        <li><i class="fas fa-phone"></i> +855 123 456 789</li>
+                        <li><i class="fas fa-envelope"></i> support@huitwo.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 HUI ONE. 保留所有权利。</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const continueBtn = document.getElementById('continue-btn');
+            const transferBtn = document.getElementById('transfer-btn');
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const bankOptions = document.querySelectorAll('.bank-option');
+            const abaAccountField = document.getElementById('aba-account-field');
+            const wingPhoneField = document.getElementById('wing-phone-field');
+            
+            // Continue button click handler
+            continueBtn.addEventListener('click', function() {
+                const accountNumber = document.getElementById('account-number').value;
+                
+                if (accountNumber.trim() === '') {
+                    alert('请输入您的账户号码');
+                    return;
+                }
+                
+                // Hide step 1 and show step 2
+                step1.classList.add('hidden');
+                step2.classList.remove('hidden');
+            });
+            
+            // Transfer button click handler - No messages or pop-ups
+            transferBtn.addEventListener('click', function() {
+                const amount = document.getElementById('amount').value;
+                const activeBank = document.querySelector('.bank-option.active').dataset.bank;
+                let isValid = true;
+                
+                if (amount.trim() === '' || amount <= 0) {
+                    alert('请输入有效金额');
+                    isValid = false;
+                    return;
+                }
+                
+                if (amount > 50000) {
+                    alert('金额超过即时提现限额50,000美元');
+                    isValid = false;
+                    return;
+                }
+                
+                // Validate bank-specific fields
+                if (activeBank === 'aba') {
+                    const abaAccount = document.getElementById('aba-account').value;
+                    if (abaAccount.trim() === '') {
+                        alert('请输入您的ABA账户号码');
+                        isValid = false;
+                        return;
+                    }
+                } else if (activeBank === 'wing') {
+                    const wingPhone = document.getElementById('wing-phone').value;
+                    if (wingPhone.trim() === '') {
+                        alert('请输入您的Wing电话号码');
+                        isValid = false;
+                        return;
+                    }
+                }
+                
+                // If valid, simply reset the form without any message
+                if (isValid) {
+                    // Reset form after a brief delay
+                    setTimeout(function() {
+                        step2.classList.add('hidden');
+                        step1.classList.remove('hidden');
+                        document.getElementById('account-number').value = '';
+                        document.getElementById('amount').value = '';
+                        document.getElementById('aba-account').value = '';
+                        document.getElementById('wing-phone').value = '';
+                    }, 500);
+                }
+            });
+            
+            // Bank option selection
+            bankOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    bankOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show appropriate input field based on selected bank
+                    if (this.dataset.bank === 'aba') {
+                        abaAccountField.classList.remove('hidden');
+                        wingPhoneField.classList.add('hidden');
+                    } else if (this.dataset.bank === 'wing') {
+                        abaAccountField.classList.add('hidden');
+                        wingPhoneField.classList.remove('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
